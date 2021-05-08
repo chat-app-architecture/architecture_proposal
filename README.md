@@ -146,9 +146,9 @@ messages bunched in 1/3rd of the day
 We're designing the core communication system behind the app, which allows users to send instant messages in chat groups.
 
 Specifically, we'll want to support:
-Basic authentication for users
-Loading the most recent messages in a group when a user clicks on the group.
-Sending and receiving messages instantly, in real time.
+- Basic authentication for users
+- Loading the most recent messages in a group when a user clicks on the group.
+- Sending and receiving messages instantly, in real time.
 
 ### Actions
 
@@ -164,8 +164,8 @@ Sending and receiving messages instantly, in real time.
 ## Coming Up With A Plan
 
 We'll tackle this system by dividing it into two main sections:
-Handling what happens when a Chat app loads.
-Handling real-time messaging.
+- Handling what happens when a Chat app loads.
+- Handling real-time messaging.
 
 We can further divide the first sections as follows:
 
@@ -310,9 +310,9 @@ Automated testing and deployment will run with the help of Circle CI.
 
 Recommendation for any application that you build in Ruby:
 
-- `Brakeman` to check for vulnerable versions of gems in Gemfile.lock.
-- `Bundler-audit` for a static analysis tool which checks Ruby on Rails applications for security vulnerabilities.
-- `Rubocop`: a static code analyzer and formatter, based on the community Ruby style guide.
+- `brakeman` to check for vulnerable versions of gems in Gemfile.lock.
+- `bundler-audit` for a static analysis tool which checks Ruby on Rails applications for security vulnerabilities.
+- `rubocop`: a static code analyzer and formatter, based on the community Ruby style guide.
 
 ### Tests and Delivery Automation
 
