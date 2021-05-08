@@ -258,7 +258,7 @@ The error message response is as follows:
 {
     “code”: code,
     “title”: title,
-    “status”: status,
+    “message”: message
 }
 ```
 
