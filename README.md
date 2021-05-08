@@ -66,28 +66,33 @@ Specifically, we'll opt for a SQL database since we can expect this data to be s
 
 We can start with a simple table that'll store every Chat app group.
 
-Groups
+### Groups
 
+```ruby
 {
   "id": uuid,
   "name": string,
   "description": string
 }
+```
 
 Then, think about the Users table.
 
-Users
+### Users
 
+```ruby
 {
   "id": uuid,
   "name": string,
   "mobile_number": string
 }
+```
 
 Then, we can have another simple table representing group-user pairs: each row in this table will correspond to a particular user who is in a particular group.
 
-Group Users
+### Group Users
 
+```ruby
 {
    "id": uuid,
    "name": string,
@@ -95,20 +100,22 @@ Group Users
    "group_id": uuid,
    "user_id": uuid
 }
+```
 
 We'll naturally need a table to store all historical messages sent on the Chat app. This will be our largest table, and it'll be queried every time a user fetches messages in a particular group. The API endpoint that'll interact with this table will return a paginated response, since we'll typically only want the 50 or 100 most recent messages per group.
 
 Also, this table will only be queried when a user clicks on a group; we don't want to fetch messages for all of a user's groups on app load, since users will likely never look at most of their groups.
 
-Historical Messages
+### Group Messages
 
+```ruby
 {
   "id": uuid,
   "group_id": uuid,
   "sender_id": uuid,
-  "sender_at": uuid,
   "body": string
 }
+```
 
 ## Load Balancing
 
@@ -205,16 +212,22 @@ When we are building a car from scratch, we have to think about which engines a 
 
 The first version of the Chat engine contains GroupMessagesController and GroupsController. These controllers provide Controller actions to manage groups and messages.
 
+<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/api-engine.png" width=500 />
+
 #### Authentication engine
 
 The first version of the Authentication Engine uses devise and devise-jwt gems. Devise is a flexible authentication solution for Rails based on Warden. The features that we can take advantage are:
 
-Database Authenticatable: hashes and stores a password in the database to validate the authenticity of a user while signing in. The authentication can be done both through POST requests or HTTP Basic Authentication.
-Registerable: handles signing up users through a registration process.
+- `Database Authenticatable`: hashes and stores a password in the database to validate the authenticity of a user while signing in. The authentication can be done both through POST requests or HTTP Basic Authentication.
+- `Registerable`: handles signing up users through a registration process.
+
+<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/authentication-engine.png" width=500 />
 
 ### Code
 
 The user_resources table is necessary because we can’t create relationships between the users table and the group_messages table since they live in different Rails engines. We should treat these components as they were different systems in different servers (IPs) that would require HTTP calls to be accessed.
+
+<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/database.png" width=500 />
 
 ## Rails API
 
@@ -234,73 +247,46 @@ We'll use Sidekiq to perform asynchronous jobs. Each job will have it's own work
 
 We'll use standard HTTP status code together with our internal code and error messages.
 
-Example:
-200 :ok
-201 :created
-202 :accepted
-400 :bad_request
-401 :unauthorized
-403 :forbidden
-500 :internal_server_error
-(and so on...)
-
-The Errors::ErrorHandler should encapsulate the error logic and this module should just be included in specific parts of the API.
+The `Errors::ErrorHandler` should encapsulate the error logic and this module should just be included in specific parts of the API.
  
-
+<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/error-handling.png" width=500 />
 
 The error message response is as follows:
 
+```ruby
 {
     “code”: code,
     “title”: title,
     “status”: status,
 }
+```
 
 For this project, we’ll raise exceptions from the Services and rescue them in the Controllers. The Controllers essentially only route the requests to the Services and rescue expectations to return customized error messages.
 
 
 #### Controllers
 
-Controller
-Action
-Single responsibility
-RegistrationsController
-create
-Creates user
-SessionsController
-create
-Authenticates user and returns token
-SessionsController
-destroy
-Signs out user
-GroupMessagesController
-create
-Creates and broadcasts message
-GroupsController
-index
-Returns a list of groups
-GroupsController
-show
-Returns a specific group
-GroupsController
-create
-Create group
+| Controller                        | Action          | Single responsibility                |
+|-----------------------------------|-----------------|--------------------------------------|
+| RegistrationsController           | create          | Creates user                         |
+| SessionsController                | create          | Authenticates user and returns token |
+| SessionsController                | destroy         | Signs out user                       |
+| GroupMessagesController           | create          | Creates and broadcasts message       |
+| GroupsController                  | index           | Returns a list of groups             |
+| GroupsController                  | show            | Returns a specific group             |
+| GroupsController                  | create          | Create group                         |
+
 
 #### Services
 
 For the API, I’ve chosen the Rails Services pattern. They offer the benefit of concentrating the core logic of the application in a separate object, instead of scattering it around controllers. It’s also a good pattern for testing purposes where you can isolate a feature or a set of steps without needing to hit the controller.
 
-Controller
-Description
-Groups::CreateService
-Creates group
-Groups::ListService
-Retrieve a list of groups
-Groups::ShowService
-Retrieve information about a group
-GroupMessages::SendMessageService
-Broadcasts message and save in DB
-
+| Controller                        | Description                          |
+|-----------------------------------|--------------------------------------|
+| Groups::CreateService             | Creates group                        |
+| Groups::ListService               | Retrieve a list of groups            |
+| Groups::ShowService               | Retrieve information about a group   |
+| GroupMessages::SendMessageService | Broadcasts message and save in DB    |
 
 Choosing design patterns for your APIs is important. At PayWith, we use other design patterns such as Command & Interface, Decorator and many others.
 
@@ -310,6 +296,7 @@ At the heart of the Swagger tools is the OpenAPI Specification.
 
 I’ve attached a Swagger docs file in the solution. You can copy and paste the code in the Online Swagger Editor: https://editor.swagger.io/.
 
+<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/swagger-docs.png" width=500 />
 
 #### Rollbar
 
@@ -322,39 +309,31 @@ Automated testing and deployment will run with the help of Circle CI.
 #### Ruby Scanners
 
 Recommendation for any application that you build in Ruby:
-Brakeman to check for vulnerable versions of gems in Gemfile.lock.
-Bundler-audit for a static analysis tool which checks Ruby on Rails applications for security vulnerabilities.
-Rubocop: a static code analyzer and formatter, based on the community Ruby style guide.
+
+- `Brakeman` to check for vulnerable versions of gems in Gemfile.lock.
+- `Bundler-audit` for a static analysis tool which checks Ruby on Rails applications for security vulnerabilities.
+- `Rubocop`: a static code analyzer and formatter, based on the community Ruby style guide.
 
 #### Tests and Delivery Automation
 
 We'll use the following tools to guarantee the quality of the application:
-TDD using RSpec, FactoryBot and ShouldaMatchers.
-Mock and Stubs to test API requests.
-We can also use VCR cassettes when needed.
-Continuous Integration and Continuous Delivery using CircleCI.
-QA using Postman or Insomnia.
 
+- TDD using RSpec, FactoryBot and ShouldaMatchers.
+- Mock and Stubs to test API requests. We can also use VCR cassettes when needed.
+- Continuous Integration and Continuous Delivery using CircleCI.
+- QA using Insomnia.
+
+<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/workflow.png" width=500 />
 
 #### Docker
 
-Docker should be our default tool in any project that we build. Dockerfile, docker-compose.yml and a Makefile are required to work with containers locally and be able to deploy applications via Docker. Some suggestion for the projects’ Makefile:
+Docker should be our default tool in any project that we build. `Dockerfile`, `docker-compose.yml` and a `Makefile` are required to work with containers locally and be able to deploy applications via Docker. Some suggestion for the projects’ Makefile:
 
-Command
-Docker command
-Description
-make start
-docker-compose up
-start the application
-make bash
-docker-compose exec web bash
-access the bash inside the container
-make build
-docker-compose build
-build the application
-make console
-docker-compose exec web bundle exec rails c
-access rails console
-make specs
-docker-compose exec web bundle exec rspec .
-run all the specs
+| Command                   | Description                            |
+|---------------------------|----------------------------------------|
+| make start                | Start the application                  |
+| make specs                | Run all the specs                      |
+| make bash                 | access the bash inside the container   |
+| make console              | access rails console                   |
+| make routes               | access rails routes                    |
+
