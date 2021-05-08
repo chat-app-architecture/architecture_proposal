@@ -69,9 +69,9 @@ While a large component of our design involves real-time communication, another 
 
 Specifically, we'll opt for a SQL database since we can expect this data to be structured and to be queried frequently.
 
-We can start with a simple table that'll store every Chat app group.
-
 ### Groups
+
+We can start with a simple table that'll store every Chat app group.
 
 ```ruby
 {
@@ -81,44 +81,30 @@ We can start with a simple table that'll store every Chat app group.
 }
 ```
 
-Then, think about the Users table.
-
 ### Users
+
+Then, think about the Users table.
 
 ```ruby
 {
   "id": uuid,
   "name": string,
-  "mobile_number": string
+  "email": string
 }
 ```
 
-Then, we can have another simple table representing group-user pairs: each row in this table will correspond to a particular user who is in a particular group.
-
-### Group Users
-
-```ruby
-{
-   "id": uuid,
-   "name": string,
-   "description": string,
-   "group_id": uuid,
-   "user_id": uuid
-}
-```
+### Group Messages
 
 We'll naturally need a table to store all historical messages sent on the Chat app. This will be our largest table, and it'll be queried every time a user fetches messages in a particular group. The API endpoint that'll interact with this table will return a paginated response, since we'll typically only want the 50 or 100 most recent messages per group.
 
 Also, this table will only be queried when a user clicks on a group; we don't want to fetch messages for all of a user's groups on app load, since users will likely never look at most of their groups.
 
-### Group Messages
-
 ```ruby
 {
   "id": uuid,
   "group_id": uuid,
-  "sender_id": uuid,
-  "body": string
+  "user_id": uuid,
+  "message": string
 }
 ```
 
