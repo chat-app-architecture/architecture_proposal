@@ -166,6 +166,15 @@ Sending and receiving messages instantly, in real time.
 
 ### Actions
 
+| Action           | Actor           | Result                            | Area         |
+|------------------|-----------------|-----------------------------------|--------------|
+| Sign up          | User            | Creates user                      | Users & Auth |
+| Sign in          | User            | Authenticates user and gets token | Users & Auth |
+| Sign out         | User            | Signs out user                    | Users & Auth |
+| Add Group        | User            | Creates group                     | Chat         |
+| Select Group     | User            | Choose a group and enter.         | Chat         |
+| Send Message     | User            | Sends a message to the group      | Chat         |
+
 ## Coming Up With A Plan
 
 We'll tackle this system by dividing it into two main sections:
