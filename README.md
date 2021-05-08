@@ -189,22 +189,25 @@ Below I’m using the C4 methodology (System Context, Container Diagram, Compone
 
 ### System Context
 
+<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/system-context.png" width=500 />
+
 * Note that I didn’t include any database replica or sharding logic to the Rails API because it would make it more complex.
 
 ### Container Diagram
 
 The Rails API explores the concepts of Rails engines in order to make sure our system is modular and we can reuse the chat engine in other Rails applications. We treat each engine as an isolated component inside this backend solution as they have a single responsibility:
 
-- Authentication Engine: Handles the Authentication for Users using devise and devise-jwt.
+- `Authentication Engine`: Handles the Authentication for Users using devise and devise-jwt.
 
-- Api Engine: Receives all the HTTP calls and interacts with the other components. Parses all the responses and send as serializers.
+- `Api Engine`: Receives all the HTTP calls and interacts with the other components. Parses all the responses and send as serializers.
 
-- Chat Engine: Component that contains business logic regarding the chat component such as Groups, GroupMessage. It offers models and factories.
+- `Chat Engine`: Component that contains business logic regarding the chat component such as Groups, GroupMessage. It offers models and factories.
+
+<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/tree-folder.png" width=300 />
 
 As you can see, this is not a normal Rails API where you’d see the standard MVC at the top of the tree folder.
 
 When we are building a car from scratch, we have to think about which engines a car is going to have. Backend APIs are not different. You should componentize your apps.
-
 
 ### Component Diagram
 
@@ -241,7 +244,7 @@ We'll rely on cache structures and indexing of Postgres to deal with the amount 
 
 #### Asynchronous jobs
 
-We'll use Sidekiq to perform asynchronous jobs. Each job will have it's own worker class. Queues will be stored in redis.
+We'll use Sidekiq to perform asynchronous jobs. Each job will have it's own worker class. Queues will be stored in Redis.
 
 #### Error Handling
 
@@ -262,7 +265,6 @@ The error message response is as follows:
 ```
 
 For this project, we’ll raise exceptions from the Services and rescue them in the Controllers. The Controllers essentially only route the requests to the Services and rescue expectations to return customized error messages.
-
 
 #### Controllers
 
@@ -288,7 +290,7 @@ For the API, I’ve chosen the Rails Services pattern. They offer the benefit of
 | Groups::ShowService               | Retrieve information about a group   |
 | GroupMessages::SendMessageService | Broadcasts message and save in DB    |
 
-Choosing design patterns for your APIs is important. At PayWith, we use other design patterns such as Command & Interface, Decorator and many others.
+Choosing design patterns for your APIs is important.
 
 #### Documentation of API
 
@@ -336,4 +338,3 @@ Docker should be our default tool in any project that we build. `Dockerfile`, `d
 | make bash                 | access the bash inside the container   |
 | make console              | access rails console                   |
 | make routes               | access rails routes                    |
-
