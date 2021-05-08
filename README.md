@@ -46,22 +46,22 @@ The Low Level section contains various parts of the systems and we do a quick de
 We're designing the core communication system behind the app, which allows users to send instant messages in chat groups.
 
 Specifically, we'll want to support:
-Loading the most recent messages in a group when a user clicks on the group.
-Sending and receiving messages instantly, in real time.
+- Loading the most recent messages in a group when a user clicks on the group.
+- Sending and receiving messages instantly, in real time.
 
-The system should have low latencies and high availability, catering to a few regions of roughly 20 million users. The largest groups will have as many as 50,000 users.
+The system should have `low latencies` and `high availability`, catering to a few regions of roughly `20 million users`. The largest groups will have as many as `50,000 users`.
 
 That being said, for the purpose of this design, we should primarily focus on latency and core functionality.
 
 ## Coming Up With A Plan
 
 We'll tackle this system by dividing it into two main sections:
-Handling what happens when a Chat app loads.
-Handling real-time messaging.
+- Handling what happens when a Chat app loads.
+- Handling real-time messaging.
 
 We can further divide the first section as follows:
-Seeing all of the groups that a User is a part of.
-Seeing messages in a particular group.
+- Seeing all of the groups that a User is a part of.
+- Seeing messages in a particular group.
 
 ## Persistent Storage Solution and App Load
 
@@ -142,15 +142,15 @@ We can design this part of our system with a Publish/Subscribe pattern. The idea
 
 This gives us a guarantee that for a single user, we only have a single thread trying to send their messages at any time.
 
-In order to have a more scalable solution that could support millions of simultaneous requests, subscribers of topics can be rings of 3 workers (clusters of servers, essentially) that use leader election to have 1 master worker do the work for the cluster (this is for our system's high availability) -- the leader grabs messages as they get pushed to the topic and executes the messages for the Users contained in the messages by calling the exchange. As mentioned above, a single Users' messages are only ever handled by the same cluster of workers, which makes our logic and our SQL queries cleaner.
+In order to have a more scalable solution that could support millions of simultaneous requests, subscribers of topics can be rings of `3 workers` (clusters of servers, essentially) that use leader election to have 1 master worker do the work for the cluster (this is for our system's high availability) -- the leader grabs messages as they get pushed to the topic and executes the messages for the Users contained in the messages by calling the exchange. As mentioned above, a single Users' messages are only ever handled by the same cluster of workers, which makes our logic and our SQL queries cleaner.
 
 As far as how many topics and clusters of workers we'll need, we can do some rough estimation. If we plan to send millions of messages per day, that comes down to about 10-100 messages per second. If we assume that the core execution logic lasts about a second, then we should have roughly 10-100 topics and clusters of workers to process messages in parallel.
 
 ```
- ~100,000 seconds per day (3600 * 24)
-  ~1,000,000 messages per day
-  messages bunched in 1/3rd of the day
-  --> (1,000,000 / 100,000) * 3 = ~30 messages per second
+~100,000 seconds per day (3600 * 24)
+~1,000,000 messages per day
+messages bunched in 1/3rd of the day
+--> (1,000,000 / 100,000) * 3 = ~30 messages per second
 ```
 
 # Systems Design - Low Level
@@ -180,11 +180,11 @@ The infrastructure is easy to understand: the Node server subscribes to Redis ev
 
 ### How it works
 
-When a User creates a new message, the Rails API publishes that new message to Redis on the “routing” channel.
-On the Node server, each client subscribing to “routing” receives that new message.
-The message is pushed to the client using Socket.IO.
-Within the browser, Socket.IO receives that new message and “publishes” that change to the frontend application.
-The frontend application listens for changes to messages and adds the new message to itself.
+1. When a User creates a new message, the Rails API publishes that new message to Redis on the “routing” channel.
+2. On the Node server, each client subscribing to “routing” receives that new message.
+3. The message is pushed to the client using Socket.IO.
+4. Within the browser, Socket.IO receives that new message and “publishes” that change to the frontend application.
+5. The frontend application listens for changes to messages and adds the new message to itself.
 
 The main advantage of this approach is that if the Node server crashes, your application will work as it always has (without real-time).
 
@@ -203,9 +203,7 @@ Below I’m using the C4 methodology (System Context, Container Diagram, Compone
 The Rails API explores the concepts of Rails engines in order to make sure our system is modular and we can reuse the chat engine in other Rails applications. We treat each engine as an isolated component inside this backend solution as they have a single responsibility:
 
 - `Authentication Engine`: Handles the Authentication for Users using devise and devise-jwt.
-
 - `Api Engine`: Receives all the HTTP calls and interacts with the other components. Parses all the responses and send as serializers.
-
 - `Chat Engine`: Component that contains business logic regarding the chat component such as Groups, GroupMessage. It offers models and factories.
 
 <img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/tree-folder.png" width=300 />
