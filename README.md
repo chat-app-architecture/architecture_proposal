@@ -1,4 +1,4 @@
-# Chat API Architecture Proposal
+# Chat App Architecture Proposal
 
 This is a Systems Design solution for a Chat app. We present a High Level and Low Level overview and discuss some of the main critical parts of a chat application.
 
