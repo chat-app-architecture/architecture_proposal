@@ -203,7 +203,7 @@ Below I’m using the C4 methodology (System Context, Container Diagram, Compone
 
 ### System Context
 
-<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/system-context.png" width=500 />
+<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/system-context.png" />
 
 * Note that I didn’t include any database replica or sharding logic to the Rails API because it would make it more complex.
 
@@ -227,7 +227,7 @@ When we are building a car from scratch, we have to think about which engines a 
 
 The first version of the Chat engine contains GroupMessagesController and GroupsController. These controllers provide Controller actions to manage groups and messages.
 
-<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/api-engine.png" width=500 />
+<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/api-engine.png" />
 
 #### Authentication engine
 
@@ -264,7 +264,7 @@ We'll use standard HTTP status code together with our internal code and error me
 
 The `Errors::ErrorHandler` should encapsulate the error logic and this module should just be included in specific parts of the API.
  
-<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/error-handling.png" width=500 />
+<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/error-handling.png" />
 
 The error message response is as follows:
 
@@ -310,7 +310,7 @@ At the heart of the Swagger tools is the OpenAPI Specification.
 
 I’ve attached a Swagger docs file in the solution. You can copy and paste the code in the Online Swagger Editor: https://editor.swagger.io/.
 
-<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/swagger-docs.png" width=500 />
+<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/swagger-docs.png" />
 
 #### Rollbar
 
@@ -337,7 +337,7 @@ We'll use the following tools to guarantee the quality of the application:
 - Continuous Integration and Continuous Delivery using CircleCI.
 - QA using Insomnia.
 
-<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/workflow.png" width=500 />
+<img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/workflow.png" />
 
 ### Docker
 
