@@ -294,7 +294,7 @@ Choosing design patterns for your APIs is important.
 
 At the heart of the Swagger tools is the OpenAPI Specification.
 
-I’ve attached a Swagger docs file in the solution. You can copy and paste the code in the Online Swagger Editor: https://editor.swagger.io/.
+I’ve attached a Swagger docs file in the organization and you can find [in this repository](https://github.com/chat-app-architecture/swagger_docs). You can copy and paste the code in the Online Swagger Editor: https://editor.swagger.io/.
 
 <img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/swagger-docs.png" />
 
