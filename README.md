@@ -1,6 +1,6 @@
 # Chat API Architecture Proposal
 
-This is a Systems Design solution for a Chat app. I present a High Level and Low Level overview and discuss some of the main critical parts of a chat application.
+This is a Systems Design solution for a Chat app. We present a High Level and Low Level overview and discuss some of the main critical parts of a chat application.
 
 - [Systems Design - High Level](#systems-design---high-level)
   - [Gathering System Requirements](#gathering-system-requirements)
@@ -9,6 +9,9 @@ This is a Systems Design solution for a Chat app. I present a High Level and Low
   - [Load Balancing](#load-balancing)
   - [Sharding](#sharding)
   - [Pub-Sub System for Real-Time Behavior](#pub-sub-system-for-real-time-behavior)
+
+The Low Level section contains various parts of the systems and we do a quick deep dive inside the internal components.
+
 - [Systems Design - Low Level](#systems-design---low-level)
   - [Gathering System Requirements](#gathering-system-requirements)
   - [Actions](#actions)
