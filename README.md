@@ -32,7 +32,7 @@ This is a Systems Design solution for a Chat app. I present a High Level and Low
         - [Documentation of API](#documentation-of-api)
         - [Rollbar](#rollbar)
         - [Circle CI](#circle-ci)
-        - [ruby-scanners](#ruby-scanners)
+        - [Ruby Scanners](#ruby-scanners)
       - [Tests and Delivery Automation](#tests-and-delivery-automation)
       - [Docker](#docker)
 
