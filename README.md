@@ -321,7 +321,7 @@ Recommendation for any application that you build in Ruby:
 - `Bundler-audit` for a static analysis tool which checks Ruby on Rails applications for security vulnerabilities.
 - `Rubocop`: a static code analyzer and formatter, based on the community Ruby style guide.
 
-#### Tests and Delivery Automation
+### Tests and Delivery Automation
 
 We'll use the following tools to guarantee the quality of the application:
 
@@ -332,7 +332,7 @@ We'll use the following tools to guarantee the quality of the application:
 
 <img src="https://github.com/chat-app-architecture/architecture_proposal/blob/main/images/workflow.png" width=500 />
 
-#### Docker
+### Docker
 
 Docker should be our default tool in any project that we build. `Dockerfile`, `docker-compose.yml` and a `Makefile` are required to work with containers locally and be able to deploy applications via Docker. Some suggestion for the projects’ Makefile:
 
