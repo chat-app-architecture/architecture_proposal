@@ -1,5 +1,7 @@
 # Chat API Architecture Proposal
 
+This is a Systems Design solution for a Chat app. I present a High Level and Low Level overview and discuss some of the main critical parts of a chat application.
+
 - [Systems Design - High Level](#systems-design---high-level)
   - [Gathering System Requirements](#gathering-system-requirements)
   - [Coming Up With A Plan](#coming-up-with-a-plan)
